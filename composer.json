@@ -26,11 +26,16 @@
   "suggest": {
     "ext-json": "Required to use JSON."
   },
+  "hyperf": {
+    "config": "Mzh\\Validate\\ConfigProvider"
+  },
   "autoload": {
     "psr-4": {
       "Mzh\\Validate\\": "src/"
     }
   },
+  "config": {
+    "sort-packages": true
+  },
   "prefer-stable": true,
-  "extra": []
 }
