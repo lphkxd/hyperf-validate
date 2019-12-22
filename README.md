@@ -2,6 +2,8 @@
 支持request 和方法场景验证，兼容tp5写法
 性能比官方验证器提高50% 
 
+安装方法  composer require mzh/hyperf-validate
+
 注：Validation 方法需要用在由DI创建的类才有用，
 
 注解
