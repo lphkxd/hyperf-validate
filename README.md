@@ -7,12 +7,13 @@
      安装方法  composer require mzh/hyperf-validate
      
 
-注：Validation 方法需要用在由DI创建的类才有用，
+注：使用验证类方法的注解@Validation 需要用在由DI创建的类才有作用，
 
-注解
+## 注解
      @Validation
      @RequestValidation
-##验证控制器数据方法如下
+     
+## 验证控制器数据方法如下
 例如 验证控制器Admin 的login方法传的数据，需要如下操作
 ```
 use Mzh\Validate\Annotations\RequestValidation;
@@ -31,7 +32,7 @@ public function login(){
 }
 ```
 
-##验证类方法数据方法如下
+## 验证类方法数据方法如下
 例如 验证控制器Admin 的login方法传的数据，需要如下操作
 ```
 use Mzh\Validate\Annotations\Validation;
