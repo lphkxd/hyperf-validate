@@ -14,7 +14,8 @@ use Mzh\Validate\Annotations\RequestValidation;
 
 mode="Admin" 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
 scene="场景" 场景，验证哪个场景。默认不写为默认的验证规则
-filter=true 过滤掉规则外无用参数 过滤后会重新写入  $this->request->getParsedBody()内，需要时直接取，数据是安全的，验证过的
+filter=true 过滤掉规则外无用参数 过滤后会重新写入$this->request->getParsedBody()内，
+              需要时直接取，数据是安全的，验证过的
 throw=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
 /**
  * @RequestValidation(mode="Admin",filter=true,throw=true)
@@ -32,7 +33,7 @@ use Mzh\Validate\Annotations\Validation;
 
 mode="Admin" 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
 scene="场景" 场景，验证哪个场景。默认不写为默认的验证规则
-filter=true 过滤掉规则外无用参数 过滤后会重新写入  $this->request->getParsedBody()内，需要时直接取，数据是安全的，验证过的
+filter=true 过滤掉规则外无用参数 过滤后会重新写入对应的字段内，需要时直接取，数据是安全的，验证过的
 throw=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
 field='data' 方法的参数名，例如 function($data,$array,$array3) 需要验证这个方法的$array参数，这里填array
 /**
