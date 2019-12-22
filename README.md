@@ -9,6 +9,7 @@
 
 例如 验证控制器Admin 的login方法传的数据，需要如下操作
 
+```
 use Mzh\Validate\Annotations\RequestValidation;
 
 mode="Admin" 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
@@ -27,4 +28,6 @@ public function login(){
 }
 
 
+
+```
 
