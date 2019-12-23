@@ -95,7 +95,7 @@ class Validate
         'fileSize' => '上传文件大小不符',
         'fileExt' => '上传文件后缀不符',
         'fileMime' => '上传文件类型不符',
-        'unique' => ':attribute 账户已存在',
+        'unique' => ':attribute 已存在',
         'afterWith' => ':attribute cannot be less than :rule',
         'beforeWith' => ':attribute cannot exceed :rule',
     ];
@@ -1654,6 +1654,7 @@ class Validate
             $db = Db::table($rule[0]);
         }
         $key = isset($rule[1]) ? $rule[1] : $field;
+        $map = [];
 
         if (strpos($key, '^')) {
             // 支持多个字段验证
