@@ -8,6 +8,7 @@
      
 
 注：使用验证类方法的注解@Validation 需要用在由DI创建的类才有作用，
+## 具体使用方法可以参考项目 https://github.com/lphkxd/hyperf-admin
 
 ## 注解
      @Validation
@@ -29,8 +30,9 @@ filter=true 过滤掉规则外无用参数 过滤后会重新写入对应的字�
 throw=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
 field="data" 方法的参数名，例如 function($data,$array,$array3) 需要验证这个方法的$array参数，这里填array
 ```  
-     
+    
 ## 验证控制器数据方法如下
+
 
 ### 例如 验证控制器Admin 的login方法传的数据，需要如下操作
 ```
