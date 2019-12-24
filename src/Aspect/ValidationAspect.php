@@ -89,7 +89,7 @@ class ValidationAspect extends AbstractAspect
          * @var Validate $validate
          */
         if (class_exists($class)) {
-            $validate = make($class);
+            $validate = new $class;
         } else {
             throw new ValidateException('class not exists:' . $class);
         }
