@@ -15,32 +15,40 @@ class RequestValidation extends AbstractAnnotation
      * 模块
      * @var string
      */
-    public  $mode = '';
+    public $mode = '';
     /**
      * 场景
      * @var string
      */
-    public  $scene = '';
+    public $scene = '';
     /**
      * 场景
      * @var string
      */
-    public  $value = '';
+    public $value = '';
     /**
      * 是否过滤多余字段
      * @var bool
      */
-    public  $filter = false;
+    public $filter = false;
     /**
+     * delete
      * 过滤是否抛出异常
      * @var bool
      */
-    public  $throw = false;
+    public $throw = false;
+
+    /**
+     * 安全模式严格按照规则字段，如果多字段会抛出异常
+     * @var bool
+     */
+    public $security = false;
+
     /**
      * 是否批量验证
      * @var bool
      */
-    public  $batch = false;
+    public $batch = false;
 
     public function __construct($value = null)
     {

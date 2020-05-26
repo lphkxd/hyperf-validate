@@ -36,6 +36,13 @@ class Validation extends AbstractAnnotation
      * @var bool
      */
     public  $throw = false;
+
+    /**
+     * 安全模式严格按照规则字段，如果多字段会抛出异常
+     * @var bool
+     */
+    public $security = false;
+
     /**
      * 是否批量验证
      * @var bool
