@@ -87,9 +87,7 @@ class ValidationAspect extends AbstractAspect
         /**
          * @var RequestValidation $validation
          */
-        if (strpos($class, '::class') === false) {
-            $class = 'app\\Validate\\' . $class . 'Validation';
-        }
+        $class = '\\App\\Validate\\' . $class . 'Validation';
         /**
          * @var Validate $validate
          */

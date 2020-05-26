@@ -12,10 +12,11 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class RequestValidation extends AbstractAnnotation
 {
     /**
-     * 模块
+     * 规则类
      * @var string
      */
     public $mode = '';
+
     /**
      * 场景
      * @var string
