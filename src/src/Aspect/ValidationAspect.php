@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Mzh\Validate\Aspect;
 
+use Hyperf\Di\Annotation\Aspect;
+use Hyperf\Di\Aop\AbstractAspect;
+use Hyperf\Di\Aop\ProceedingJoinPoint;
+use Hyperf\Di\Exception\Exception;
+use Hyperf\Utils\Context;
 use Mzh\Validate\Annotations\RequestValidation;
 use Mzh\Validate\Annotations\Validation;
 use Mzh\Validate\Exception\ValidateException;
-use Hyperf\Di\Annotation\Aspect;
-use Hyperf\Di\Aop\AbstractAspect;
-use Hyperf\Di\Exception\Exception;
-use Hyperf\Utils\Context;
 use Mzh\Validate\Validate\Validate;
 use Psr\Container\ContainerInterface;
-use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -84,9 +84,10 @@ class ValidationAspect extends AbstractAspect
      */
     private function validationData($validation, $verData, $name, $proceedingJoinPoint, $isRequest = false)
     {
-        if (strpos($name, '::class') === false) {
-            $class = 'app\\Validate\\' . $name . 'Validation';
-        }
+        /**
+         * @var RequestValidation $validation
+         */
+        $class = 'app\\Validate\\' . $name . 'Validation';
         /**
          * @var Validate $validate
          */
@@ -98,21 +99,35 @@ class ValidationAspect extends AbstractAspect
         if ($validation->scene == '') {
             $validation->scene = $proceedingJoinPoint->methodName;
         }
-        $validate = $validate->makeCheck($verData, $validation->scene, $validation->filter, $validation->throw, $validation->batch);
-        if ($validation->filter) {
-            foreach ($validate as $key => $item) {
-                if ($item === null) {
-                    unset($validate[$key]);
+        $rules = $validate->getSceneRule($validation->scene);
+
+        if ($validate->batch($validation->batch)->check($verData, $rules) === false) {
+            throw new ValidateException($validate->getError());
+        }
+
+        if ($validation->security) {
+            foreach ($verData as $key => $item) {
+                if (!isset($rules[$key])) {
+                    throw new ValidateException($key . ' invalid');
                 }
             }
+        };
+
+        if ($validation->filter) {
+            foreach ($rules as $key => $item) {
+                if (isset($verData[$key]) && $verData[$key] === null) {
+                    unset($verData[$key]);
+                }
+            }
+
             switch ($isRequest) {
                 case true:
-                    Context::override(ServerRequestInterface::class, function (ServerRequestInterface $request) use ($validate) {
-                        return $request->withParsedBody($validate);
+                    Context::override(ServerRequestInterface::class, function (ServerRequestInterface $request) use ($verData) {
+                        return $request->withParsedBody($verData);
                     });
                     break;
                 default:
-                    $proceedingJoinPoint->arguments['keys'][$validation->field] = $validate;
+                    $proceedingJoinPoint->arguments['keys'][$validation->field] = $verData;
                     break;
             }
         }
