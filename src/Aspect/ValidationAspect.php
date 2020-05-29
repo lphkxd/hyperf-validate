@@ -106,8 +106,15 @@ class ValidationAspect extends AbstractAspect
         }
 
         if ($validation->security) {
+            $fields = [];
+            foreach ($rules as $field => $rule) {
+                if (is_numeric($field)) {
+                    $field = $rule;
+                }
+                $fields[$field] = 1;
+            }
             foreach ($verData as $key => $item) {
-                if (!isset($rules[$key])) {
+                if (!isset($fields[$key])) {
                     throw new ValidateException($key . ' invalid');
                 }
             }
