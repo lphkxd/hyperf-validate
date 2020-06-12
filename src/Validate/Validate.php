@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace Mzh\Validate\Validate;
 
+use Hyperf\DbConnection\Db;
 use Hyperf\Utils\Str;
 
 class Validate
@@ -46,8 +47,55 @@ class Validate
     protected $typeMsg = [
 
         'must' => ':attribute 必须',
+        'number' => ':attribute 必须 be numeric',
+        'integer' => ':attribute 必须 be integer',
+        'float' => ':attribute 必须 be float',
+        'boolean' => ':attribute 必须 be bool',
+        'email' => ':attribute 不是有效的电子邮件地址',
         'mobile' => ':attribute not a valid mobile',
+        'array' => ':attribute must be a array',
+        'accepted' => ':attribute must be yes,on or 1',
+        'date' => ':attribute not a valid datetime',
+        'file' => ':attribute not a valid file',
+        'image' => ':attribute not a valid image',
+        'alpha' => ':attribute must be alpha',
+        'alphaNum' => ':attribute must be alpha-numeric',
+        'alphaDash' => ':attribute must be alpha-numeric, dash, underscore',
+        'activeUrl' => ':attribute not a valid domain or ip',
+        'chs' => ':attribute must be chinese',
+        'chsAlpha' => ':attribute must be chinese or alpha',
+        'chsAlphaNum' => ':attribute must be chinese,alpha-numeric',
+        'chsDash' => ':attribute must be chinese,alpha-numeric,underscore, dash',
+        'url' => ':attribute not a valid url',
+        'ip' => ':attribute not a valid ip',
+        'dateFormat' => ':attribute must be dateFormat of :rule',
+        'in' => ':attribute must be in :rule',
+        'notIn' => ':attribute be notin :rule',
+        'between' => ':attribute must between :1 - :2',
+        'notBetween' => ':attribute not between :1 - :2',
+        'length' => 'size of :attribute must be :rule',
+        'max' => 'max size of :attribute must be :rule',
+        'min' => 'min size of :attribute must be :rule',
+        'after' => ':attribute cannot be less than :rule',
+        'before' => ':attribute cannot exceed :rule',
+        'expire' => ':attribute not within :rule',
+        'allowIp' => 'access IP is not allowed',
+        'denyIp' => 'access IP denied',
+        'confirm' => ':attribute out of accord with :2',
+        'different' => ':attribute cannot be same with :2',
+        'egt' => ':attribute must greater than or equal :rule',
+        'gt' => ':attribute must greater than :rule',
+        'elt' => ':attribute must less than or equal :rule',
+        'lt' => ':attribute must less than :rule',
+        'eq' => ':attribute must equal :rule',
+        'unique' => ':attribute has exists',
+        'regex' => ':attribute not conform to the rules',
+        'method' => 'invalid Request method',
         'token' => 'invalid token',
+        'fileSize' => 'filesize not match',
+        'fileExt' => 'extensions to upload is not allowed',
+        'fileMime' => 'mimetype to upload is not allowed',
+
         'require' => ':attribute不能为空',
         'number' => ':attribute必须是数字',
         'integer' => ':attribute必须是整数',
@@ -507,7 +555,6 @@ class Validate
             } else {
                 $result = $this->checkItem($key, $value, $rule, $data, $title);
             }
-
             if (true !== $result) {
                 // 没有返回true 则表示验证失败
                 if (!empty($this->batch)) {
@@ -521,7 +568,6 @@ class Validate
                 }
             }
         }
-
         if (!empty($this->error)) {
             if ($this->failException) {
                 throw new ValidateException($this->error);
@@ -1117,14 +1163,12 @@ class Validate
         if (is_string($rule)) {
             $rule = explode(',', $rule);
         }
-
         if (false !== strpos($rule[0], '\\')) {
             // 指定模型类
             $db = new $rule[0];
         } else {
-            $db = $this->db->name($rule[0]);
+            $db = Db::table($rule[0]);
         }
-
         $key = $rule[1] ?? $field;
         $map = [];
 
@@ -1142,20 +1186,16 @@ class Validate
             $map = [];
         }
 
-        $pk = !empty($rule[3]) ? $rule[3] : $db->getPk();
+        $pk = !empty($rule[3]) ? $rule[3] : 'id';
 
         if (is_string($pk)) {
-            if (isset($rule[2])) {
-                $map[] = [$pk, '<>', $rule[2]];
-            } elseif (isset($data[$pk])) {
+            if (isset($data[$pk])) {
                 $map[] = [$pk, '<>', $data[$pk]];
             }
         }
-
-        if ($db->where($map)->field($pk)->find()) {
+        if ($db->where($map)->count()) {
             return false;
         }
-
         return true;
     }
 
