@@ -47,55 +47,8 @@ class Validate
     protected $typeMsg = [
 
         'must' => ':attribute 必须',
-        'number' => ':attribute 必须 be numeric',
-        'integer' => ':attribute 必须 be integer',
-        'float' => ':attribute 必须 be float',
-        'boolean' => ':attribute 必须 be bool',
-        'email' => ':attribute 不是有效的电子邮件地址',
         'mobile' => ':attribute not a valid mobile',
-        'array' => ':attribute must be a array',
-        'accepted' => ':attribute must be yes,on or 1',
-        'date' => ':attribute not a valid datetime',
-        'file' => ':attribute not a valid file',
-        'image' => ':attribute not a valid image',
-        'alpha' => ':attribute must be alpha',
-        'alphaNum' => ':attribute must be alpha-numeric',
-        'alphaDash' => ':attribute must be alpha-numeric, dash, underscore',
-        'activeUrl' => ':attribute not a valid domain or ip',
-        'chs' => ':attribute must be chinese',
-        'chsAlpha' => ':attribute must be chinese or alpha',
-        'chsAlphaNum' => ':attribute must be chinese,alpha-numeric',
-        'chsDash' => ':attribute must be chinese,alpha-numeric,underscore, dash',
-        'url' => ':attribute not a valid url',
-        'ip' => ':attribute not a valid ip',
-        'dateFormat' => ':attribute must be dateFormat of :rule',
-        'in' => ':attribute must be in :rule',
-        'notIn' => ':attribute be notin :rule',
-        'between' => ':attribute must between :1 - :2',
-        'notBetween' => ':attribute not between :1 - :2',
-        'length' => 'size of :attribute must be :rule',
-        'max' => 'max size of :attribute must be :rule',
-        'min' => 'min size of :attribute must be :rule',
-        'after' => ':attribute cannot be less than :rule',
-        'before' => ':attribute cannot exceed :rule',
-        'expire' => ':attribute not within :rule',
-        'allowIp' => 'access IP is not allowed',
-        'denyIp' => 'access IP denied',
-        'confirm' => ':attribute out of accord with :2',
-        'different' => ':attribute cannot be same with :2',
-        'egt' => ':attribute must greater than or equal :rule',
-        'gt' => ':attribute must greater than :rule',
-        'elt' => ':attribute must less than or equal :rule',
-        'lt' => ':attribute must less than :rule',
-        'eq' => ':attribute must equal :rule',
-        'unique' => ':attribute has exists',
-        'regex' => ':attribute not conform to the rules',
-        'method' => 'invalid Request method',
         'token' => 'invalid token',
-        'fileSize' => 'filesize not match',
-        'fileExt' => 'extensions to upload is not allowed',
-        'fileMime' => 'mimetype to upload is not allowed',
-
         'require' => ':attribute不能为空',
         'number' => ':attribute必须是数字',
         'integer' => ':attribute必须是整数',
@@ -143,6 +96,7 @@ class Validate
         'fileExt' => '上传文件后缀不符',
         'fileMime' => '上传文件类型不符',
         'unique' => ':attribute 已存在',
+        'arrayHasOnlyInts' => ':attribute 只允许为int类型或array(int,int)',
         'afterWith' => ':attribute cannot be less than :rule',
         'beforeWith' => ':attribute cannot exceed :rule',
 
@@ -1697,6 +1651,17 @@ class Validate
     public function getSceneRule(string $name)
     {
         return $this->scene[$name] ?? $this->rule;
+    }
+
+    function arrayHasOnlyInts($array)
+    {
+        foreach ($array as $value) {
+            if (!is_int($value)) // there are several ways to do this
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

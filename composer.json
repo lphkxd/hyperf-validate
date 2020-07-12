@@ -12,15 +12,14 @@
   "require": {
     "php": ">=7.2",
     "ext-swoole": ">=4.4",
-    "hyperf/http-message": "^1.1",
-    "hyperf/config": "~1.1.0",
-    "hyperf/di": "~1.1.0",
-    "hyperf/framework": "~1.1.0",
-    "hyperf/utils": "~1.1.0",
+    "hyperf/http-message": "~2.0.0",
+    "hyperf/config": "~2.0.0",
+    "hyperf/di": "~2.0.1",
+    "hyperf/framework": "~2.0.0",
+    "hyperf/utils": "~2.0.0",
     "ext-json": "*"
   },
   "require-dev": {
-    "swoft/swoole-ide-helper": "^4.2",
     "friendsofphp/php-cs-fixer": "^2.14"
   },
   "suggest": {
