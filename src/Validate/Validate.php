@@ -96,7 +96,8 @@ class Validate
         'fileExt' => '上传文件后缀不符',
         'fileMime' => '上传文件类型不符',
         'unique' => ':attribute 已存在',
-        'arrayHasOnlyInts' => ':attribute 只允许为int类型或array(int,int)',
+        'arrayHasOnlyInts' => ':attribute 只允许为array(int,int)',
+        'intOrArrayInt' => ':attribute 只允许为int类型或array(int,int)',
         'afterWith' => ':attribute cannot be less than :rule',
         'beforeWith' => ':attribute cannot exceed :rule',
 
@@ -1651,6 +1652,18 @@ class Validate
     public function getSceneRule(string $name)
     {
         return $this->scene[$name] ?? $this->rule;
+    }
+
+    function intOrArrayInt($array)
+    {
+        if (is_int($array)) return true;
+        foreach ($array as $value) {
+            if (!is_int($value)) // there are several ways to do this
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     function arrayHasOnlyInts($array)
