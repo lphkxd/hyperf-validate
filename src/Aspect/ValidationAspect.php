@@ -50,22 +50,28 @@ class ValidationAspect extends AbstractAspect
              */
             switch (true) {
                 case $validation instanceof RequestValidation:
-                    if (!empty($validation->mode)) {
-                        $name = $validation->mode;
-                    } else {
-                        $name = class_basename($proceedingJoinPoint->className);
+                    if (empty($validation->validate)) {
+                        if (!empty($validation->mode)) {
+                            $class = $validation->mode;
+                        } else {
+                            $class = class_basename($proceedingJoinPoint->className);
+                        }
+                        $validation->validate = '\\App\\Validate\\' . $class . 'Validation';
                     }
                     $verData = $this->request->all();
-                    $this->validationData($validation, $verData, $name, $proceedingJoinPoint, true);
+                    $this->validationData($validation, $verData, $validation->validate, $proceedingJoinPoint, true);
                     break;
                 case $validation instanceof Validation:
-                    if (!empty($validation->mode)) {
-                        $name = $validation->mode;
-                    } else {
-                        throw new ValidateException('mode 不能为空');
+                    if (empty($validation->validate)) {
+                        if (!empty($validation->mode)) {
+                            $name = $validation->mode;
+                        } else {
+                            throw new ValidateException('validate和mode 不能同时为空');
+                        }
+                        $validation->validate = '\\App\\Validate\\' . $name . 'Validation';
                     }
                     $verData = $proceedingJoinPoint->arguments['keys'][$validation->field];
-                    $this->validationData($validation, $verData, $name, $proceedingJoinPoint);
+                    $this->validationData($validation, $verData, $validation->validate, $proceedingJoinPoint);
                     break;
                 default:
                     break;
@@ -87,7 +93,6 @@ class ValidationAspect extends AbstractAspect
         /**
          * @var RequestValidation $validation
          */
-        $class = '\\App\\Validate\\' . $class . 'Validation';
         /**
          * @var Validate $validate
          */

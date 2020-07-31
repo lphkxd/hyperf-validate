@@ -17,6 +17,11 @@ class Validation extends AbstractAnnotation
      */
     public  $mode = '';
     /**
+     * 验证器
+     * @var string
+     */
+    public  $validate = '';
+    /**
      * 场景
      * @var string
      */
