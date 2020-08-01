@@ -820,6 +820,7 @@ class Validate
     {
         switch (Str::camel($rule)) {
             case 'require':
+            case 'required':
                 // 必须
                 $result = !empty($value) || '0' == $value;
                 break;
