@@ -1674,7 +1674,7 @@ class Validate
     function arrayHasOnlyInts($array)
     {
         foreach ($array as $value) {
-            if (!is_int($value)) // there are several ways to do this
+            if (!is_numeric($value)) // there are several ways to do this
             {
                 return false;
             }
