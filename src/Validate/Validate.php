@@ -480,10 +480,14 @@ class Validate
         }
 
         foreach ($rules as $key => $rule) {
+
             // field => 'rule1|rule2...' field => ['rule1','rule2',...]
             if (is_numeric($key)) {
                 $key = $rule;
                 $rule = $this->rule[$key] ?? '';
+            }
+            if (is_array($rule)) {
+                $rule = array_filter($rule);
             }
             if (empty($rule)) {
                 continue;
@@ -511,6 +515,7 @@ class Validate
                 $result = $this->checkItem($key, $value, $rule, $data, $title);
             }
             if (true !== $result) {
+
                 // 没有返回true 则表示验证失败
                 if (!empty($this->batch)) {
                     // 批量验证
@@ -592,7 +597,6 @@ class Validate
             // 字段已经移除 无需验证
             return true;
         }
-
         // 支持多规则验证 require|in:a,b,c|... 或者 ['require','in'=>'a,b,c',...]
         if (is_string($rules)) {
             $rules = explode('|', $rules);
@@ -614,6 +618,7 @@ class Validate
                 $info = is_numeric($key) ? '' : $key;
             } else {
                 // 判断验证类型
+
                 [$type, $rule, $info] = $this->getValidateType($key, $rule);
                 if (isset($this->append[$field]) && in_array($info, $this->append[$field])) {
                 } elseif (isset($this->remove[$field]) && in_array($info, $this->remove[$field])) {
@@ -693,7 +698,6 @@ class Validate
             $type = 'is';
             $info = $rule;
         }
-
         return [$type, $rule, $info];
     }
 
@@ -1657,9 +1661,9 @@ class Validate
 
     function intOrArrayInt($array)
     {
-        if (is_int($array)) return true;
+        if (is_numeric($array)) return true;
         foreach ($array as $value) {
-            if (!is_int($value)) // there are several ways to do this
+            if (!is_numeric($value)) // there are several ways to do this
             {
                 return false;
             }
