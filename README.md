@@ -1,6 +1,6 @@
 # hyperf-validate
-支持request 和方法场景验证，兼容tp5写法
-性能比官方验证器提高50% 
+支持request 和方法场景验证，兼容tp写法
+性能比laravel验证器提高50% 
 
 <p align="center">
     <a href="https://github.com/lphkxd/hyperf-validate/releases"><img src="https://poser.pugx.org/mzh/hyperf-validate/v/stable" alt="Stable Version"></a>
