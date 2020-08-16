@@ -16,8 +16,6 @@
 
      安装方法  composer require mzh/hyperf-validate
      
-
-注：使用验证类方法的注解@Validation 需要用在由DI创建的类才有作用，
 ## 具体使用方法可以参考项目 https://github.com/lphkxd/hyperf-admin
 
 ## 注解
