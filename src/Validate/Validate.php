@@ -5,6 +5,7 @@ namespace Mzh\Validate\Validate;
 
 use Hyperf\DbConnection\Db;
 use Hyperf\Utils\Str;
+use Mzh\Validate\Exception\ValidateException;
 
 class Validate
 {
@@ -459,7 +460,7 @@ class Validate
      * @param array $rules 验证规则
      * @return bool
      */
-    public function check(array $data, array $rules = []): bool
+    public function check(array $data, array $rules = [], $prefix = ''): bool
     {
 
         $this->error = [];
@@ -478,9 +479,7 @@ class Validate
                 $rules[$key] = $rule;
             }
         }
-
         foreach ($rules as $key => $rule) {
-
             // field => 'rule1|rule2...' field => ['rule1','rule2',...]
             if (is_numeric($key)) {
                 $key = $rule;
@@ -489,6 +488,7 @@ class Validate
             if (is_array($rule)) {
                 $rule = array_filter($rule);
             }
+
             if (empty($rule)) {
                 continue;
             }
@@ -496,7 +496,7 @@ class Validate
                 // 字段|描述 用于指定属性名称
                 [$key, $title] = explode('|', $key);
             } else {
-                $title = $this->field[$key] ?? $key;
+                $title = ($this->field[$prefix][$key] ?? $this->field[$key] ?? trim($prefix . '.' . $key, '.'));
             }
             // 场景检测
             if (!empty($this->only) && !in_array($key, $this->only)) {
@@ -504,18 +504,37 @@ class Validate
             }
             // 获取数据 支持二维数组
             $value = $this->getDataValue($data, $key);
-
-            // 字段验证
-            if ($rule instanceof Closure) {
-                $result = call_user_func_array($rule, [$value, $data]);
-            } elseif ($rule instanceof ValidateRule) {
-                //  验证因子
-                $result = $this->checkItem($key, $value, $rule->getRule(), $data, $rule->getTitle() ?: $title, $rule->getMsg());
-            } else {
-                $result = $this->checkItem($key, $value, $rule, $data, $title);
+            switch (true) {
+                case $rule instanceof Closure:
+                    $result = call_user_func_array($rule, [$value, $data]);
+                    break;
+                case $rule instanceof ValidateRule:
+                    $result = $this->checkItem($key, $value, $rule->getRule(), $data, $rule->getTitle() ?: $title, $rule->getMsg());
+                    break;
+                case is_array($rule):
+                    if (!is_array($data[$key])) {
+                        $result = $key . "必须为二维数组";
+                        break;
+                    }
+                    $ruleStr = [];
+                    foreach ($rule as $ruleKey => $itemRule) {
+                        $field = str_replace('*.', '', $ruleKey);
+                        $ruleStr[$field] = $itemRule;
+                    }
+                    foreach ($data[$key] as $item) {
+                        if (!is_array($item)) {
+                            $result = $key . "必须为二维数组";
+                            break;
+                        }
+                        $result = $this->check($item, $ruleStr, $key);
+                        if ($result !== true) return false;
+                    }
+                    break;
+                default:
+                    $result = $this->checkItem($key, $value, $rule, $data, $title);
+                    break;
             }
             if (true !== $result) {
-
                 // 没有返回true 则表示验证失败
                 if (!empty($this->batch)) {
                     // 批量验证
@@ -528,6 +547,7 @@ class Validate
                 }
             }
         }
+
         if (!empty($this->error)) {
             if ($this->failException) {
                 throw new ValidateException($this->error);
@@ -537,6 +557,7 @@ class Validate
 
         return true;
     }
+
 
     /**
      * 根据验证规则验证数据
@@ -592,7 +613,6 @@ class Validate
      */
     protected function checkItem(string $field, $value, $rules, $data, string $title = '', array $msg = [])
     {
-
         if (isset($this->remove[$field]) && true === $this->remove[$field] && empty($this->append[$field])) {
             // 字段已经移除 无需验证
             return true;
@@ -645,6 +665,7 @@ class Validate
                 } else {
                     $message = $this->getRuleMsg($field, $title, $info, $rule);
                 }
+
 
                 return $message;
             } elseif (true !== $result) {

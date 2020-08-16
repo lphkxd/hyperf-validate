@@ -26,18 +26,40 @@
 
 ### @RequestValidation 参数说明
 ```
-mode="Admin" 默认取当前类文件名 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
+方式一：
+validate = 验证类 例如   validate=AdminValidation::class
+方式2：
+mode="Admin" 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
+方式3：
+不填写以上2个参数，默认取验证器为当前控制器类文件名的验证器文件
+     （如果使用了mzh/hyperf-swagger 根据验证器规则生成文档 见下图1）
+
 scene="场景" 场景，验证哪个场景。默认不写为默认的验证规则
 filter=true 过滤掉规则外无用参数 过滤后会重新写入$this->request->getParsedBody()内，
               需要时直接取，数据是安全的，验证过的
-throw=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
+security=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
+              （如果使用了mzh/hyperf-swagger 会在生成的接口上标记接口需token验证的小锁 见下图2）
+userOpen = true  (可选)，此参数是配合 mzh/hyperf-admin权限验证，设为true为只要登录该路由的url就可以访问，否则需要授权才可以访问
 ```
+ - 图1 
+![Image 文档](./screenshot/1.png)
+
+ - 图2
+![Image 文档](./screenshot/2.png)
+
+
 ### @Validation 参数说明
 ```
+方式一：
+validate = 验证类 例如   validate=AdminValidation::class
+方式2：
 mode="Admin" 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
+方式3：
+不填写以上2个参数，默认取验证器为当前类文件名的验证器文件
+
 scene="场景" 场景，验证哪个场景。默认不写为默认的验证规则
 filter=true 过滤掉规则外无用参数 过滤后会重新写入对应的字段内，需要时直接取，数据是安全的，验证过的
-throw=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
+security=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
 field="data" 方法的参数名，例如 function($data,$array,$array3) 需要验证这个方法的$array参数，这里填array
 ```  
     
@@ -65,7 +87,6 @@ use Mzh\Validate\Annotations\Validation;
 /**
  * @Validation(mode="Admin",scene="login",field="data")
  * @Validation(mode="Admin",scene="array的规则",field="array")
- * @Validation(mode="Admin",scene="array2的规则",field="array2")
  */
 public function login($data,$array,$array2){
       //这里取到的 $data,$array,$array2 是安全的，经过验证器验证过的
