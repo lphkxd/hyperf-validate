@@ -93,3 +93,25 @@ public function login($data,$array,$array2){
 
 }
 ```
+## 多维数组验证
+```
+
+ protected $rule = [
+        'username' => 'max:12',
+        'password' => 'max:18',
+        'data' => [ #划重点  数组形式将需要验证的字段和规则写入  看图3、4、5
+            "user_id" => 'require|in:0,1',
+            'status' => 'require|in:0,1',
+        ],
+    ];
+
+```
+ - 图3 使用注解方式
+![Image 文档](./screenshot/3.png)
+
+ - 图4 写验证器规则和场景
+![Image 文档](./screenshot/4.png)
+
+ - 图5 测试结果
+![Image 文档](./screenshot/5.png)
+
