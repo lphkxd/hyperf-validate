@@ -511,6 +511,9 @@ class Validate
                 case $rule instanceof ValidateRule:
                     $result = $this->checkItem($key, $value, $rule->getRule(), $data, $rule->getTitle() ?: $title, $rule->getMsg());
                     break;
+                case is_array($rule) && is_integer(key($rule)):      #判断是否是二维数组验证
+                    $result = $this->checkItem($key, $value, $rule, $data, $title);
+                    break;
                 case is_array($rule):
                     if (!is_array($data[$key])) {
                         $result = $key . "必须为二维数组";
