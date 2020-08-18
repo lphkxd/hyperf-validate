@@ -515,8 +515,8 @@ class Validate
                     $result = $this->checkItem($key, $value, $rule, $data, $title);
                     break;
                 case is_array($rule):
-                    if (!is_array($data[$key])) {
-                        $result = $key . "必须为二维数组";
+                      if (!isset($data[$key]) || !is_array($data[$key])) {
+                        $result = '参数' . $key . "必须为二维数组";
                         break;
                     }
                     $ruleStr = [];
