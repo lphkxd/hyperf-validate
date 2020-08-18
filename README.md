@@ -30,13 +30,13 @@ validate = 验证类 例如   validate=AdminValidation::class
 mode="Admin" 验证的模块规则/app/Validate/AdminValidation.php 文件的验证规则
 方式3：
 不填写以上2个参数，默认取验证器为当前控制器类文件名的验证器文件
-     （如果使用了mzh/hyperf-swagger 根据验证器规则生成文档 见下图1）
+          （如果使用了mzh/hyperf-swagger 根据验证器规则生成文档 见下图1）
 
 scene="场景" 场景，验证哪个场景。默认不写为默认的验证规则
 filter=true 过滤掉规则外无用参数 过滤后会重新写入$this->request->getParsedBody()内，
               需要时直接取，数据是安全的，验证过的
 security=true 严格验证模式，如果开启，则用户传入无用参数，直接抛出异常，提示传入的字段xx无效，
-              （如果使用了mzh/hyperf-swagger 会在生成的接口上标记接口需token验证的小锁 见下图2）
+              （如果使用了mzh/hyperf-swagger 会在生成的接口上标记接口需token验证的小锁 见下图2，如果使用了hyperf-admin，则设为false此方法为开放资源，不验证此任何权限）
 userOpen = true  (可选)，此参数是配合 mzh/hyperf-admin权限验证，设为true为只要登录该路由的url就可以访问，否则需要授权才可以访问
 ```
  - 图1 
