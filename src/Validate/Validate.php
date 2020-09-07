@@ -760,10 +760,10 @@ class Validate
     public function confirmed($value, $rule, array $data = [], string $field = ''): bool
     {
         if ('' == $rule) {
-            if (strpos($field, '_confirmation')) {
-                $rule = strstr($field, '_confirmation', true);
+            if (strpos($field, '_confirm')) {
+                $rule = strstr($field, '_confirm', true);
             } else {
-                $rule = $field . '_confirmation';
+                $rule = $field . '_confirm';
             }
         }
         return $this->getDataValue($data, $rule) === $value;
