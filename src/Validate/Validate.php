@@ -85,6 +85,7 @@ class Validate
         'allowIp' => '不允许的IP访问',
         'denyIp' => '禁止的IP访问',
         'confirm' => ':attribute和确认字段:2不一致',
+        'confirmed' => ':attribute和确认字段:2不一致',
         'different' => ':attribute和比较字段:2不能相同',
         'egt' => ':attribute必须大于等于 :rule',
         'gt' => ':attribute必须大于 :rule',
@@ -744,6 +745,27 @@ class Validate
             }
         }
 
+        return $this->getDataValue($data, $rule) === $value;
+    }
+
+    /**
+     * 验证是否和某个字段的值一致
+     * @access public
+     * @param mixed $value 字段值
+     * @param mixed $rule 验证规则
+     * @param array $data 数据
+     * @param string $field 字段名
+     * @return bool
+     */
+    public function confirmed($value, $rule, array $data = [], string $field = ''): bool
+    {
+        if ('' == $rule) {
+            if (strpos($field, '_confirmation')) {
+                $rule = strstr($field, '_confirmation', true);
+            } else {
+                $rule = $field . '_confirmation';
+            }
+        }
         return $this->getDataValue($data, $rule) === $value;
     }
 
