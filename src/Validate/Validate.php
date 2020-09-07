@@ -1172,10 +1172,10 @@ class Validate
 
         $pk = !empty($rule[3]) ? $rule[3] : 'id';
 
-        if (is_string($pk)) {
-            if (isset($data[$pk])) {
-                $map[] = [$pk, '<>', $data[$pk]];
-            }
+        if (isset($data[$pk])) {
+            $map[] = [$pk, '<>', $data[$pk]];
+        } elseif (isset($rule[2]) && $rule[2] != '') {
+            $map[] = [$pk, '<>', $rule[2]];
         }
         if ($db->where($map)->count()) {
             return false;
