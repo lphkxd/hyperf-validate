@@ -1728,6 +1728,11 @@ class Validate
         return true;
     }
 
+    function string($value)
+    {
+        return is_string($value);
+    }
+
     /**
      * 动态方法 直接调用is方法进行验证
      * @access public
